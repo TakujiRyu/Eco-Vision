@@ -1,39 +1,32 @@
-from flask import Flask, render_template, Response
+from flask import Flask, render_template, request, jsonify
 import cv2
-import time
-import cvzone
-import os
+import numpy as np
+import base64
 from ultralytics import YOLO
+import time
+import os
 
 app = Flask(__name__)
-
-# Load model
 model = YOLO("best.pt")
-confidence_threshold = 0.6
-CRUSHED_HEIGHT_THRESHOLD = 350
 
-# Class names and point mapping
 classNames = ["bottle", "crushed_bottle", "none"]
-points_map = {"bottle": 2, "crushed_bottle": 1}
-total_points = 0
-cooldown_active = False
-cooldown_duration = 3  # seconds
-last_detection_time = 0
+CRUSHED_HEIGHT_THRESHOLD = 350
+confidence_threshold = 0.6
 
+@app.route('/')
+def index():
+    return render_template('index.html')
 
-def generate_frames():
-    global total_points, cooldown_active, last_detection_time
+@app.route('/detect', methods=['POST'])
+def detect():
+    try:
+        data = request.json['image']
+        img_data = base64.b64decode(data.split(',')[1])
+        np_arr = np.frombuffer(img_data, np.uint8)
+        img = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
 
-    cap = cv2.VideoCapture(0)
-    cap.set(3, 640)
-    cap.set(4, 480)
+        total_points = 0
 
-    while True:
-        success, img = cap.read()
-        if not success:
-            break
-
-        current_time = time.time()
         results = model(img, stream=True, verbose=False)
 
         for r in results:
@@ -44,66 +37,26 @@ def generate_frames():
                 if conf < confidence_threshold:
                     continue
 
-                # Determine class
                 if h < CRUSHED_HEIGHT_THRESHOLD:
                     cls = 1
+                    total_points += 1
                 else:
                     cls = 0
+                    total_points += 2
 
                 label = classNames[cls]
                 color = (0, 255, 0) if label == "bottle" else (255, 165, 0)
 
-                # Draw box
-                cvzone.cornerRect(img, (x1, y1, w, h), colorC=color, colorR=color)
-                cvzone.putTextRect(
-                    img,
-                    f'{label.upper()} {int(conf * 100)}%',
-                    (max(0, x1), max(35, y1)),
-                    scale=1.5,
-                    thickness=2,
-                    colorR=color,
-                    colorB=color
-                )
+                cv2.rectangle(img, (x1, y1), (x2, y2), color, 2)
+                cv2.putText(img, label, (x1, y1 - 10),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 2)
 
-                # Add points if cooldown is off
-                if not cooldown_active:
-                    total_points += points_map[label]
-                    cooldown_active = True
-                    last_detection_time = current_time
-
-        # Cooldown timer
-        if cooldown_active and (current_time - last_detection_time > cooldown_duration):
-            cooldown_active = False
-
-        # Display total points
-        cv2.putText(
-            img,
-            f"Total Points: {total_points}",
-            (10, 50),
-            cv2.FONT_HERSHEY_SIMPLEX,
-            1.2,
-            (0, 255, 255),
-            3
-        )
-
-        # Encode image to stream
-        ret, buffer = cv2.imencode('.jpg', img)
-        frame = buffer.tobytes()
-        yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-
-
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-
-@app.route('/video')
-def video():
-    return Response(generate_frames(),
-                    mimetype='multipart/x-mixed-replace; boundary=frame')
-
-
+        _, buffer = cv2.imencode('.jpg', img)
+        result_img = base64.b64encode(buffer).decode('utf-8')
+        return jsonify({'points': total_points, 'image': f"data:image/jpeg;base64,{result_img}"})
+    except Exception as e:
+        return jsonify({'error': str(e)})
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))  # Use PORT from environment or default to 5000
+    port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
