@@ -2,6 +2,7 @@ from flask import Flask, render_template, Response
 import cv2
 import time
 import cvzone
+import os
 from ultralytics import YOLO
 
 app = Flask(__name__)
@@ -102,5 +103,7 @@ def video():
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))  # Use PORT from environment or default to 5000
+    app.run(host='0.0.0.0', port=port)
