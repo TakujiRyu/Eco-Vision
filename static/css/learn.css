@@ -1,0 +1,34 @@
+.learn {
+    padding: 40px 20px;
+    text-align: left;
+}
+
+.learn-text {
+    position: relative;
+    padding-left: 15%;
+}
+
+.learn-text h3 {
+    color: #9C9C9C;
+    font-size: 2rem;
+    margin-top: -1rem;
+    padding-bottom: 2rem;
+}
+
+.learn-text p {
+    font-size: 1rem;
+}
+
+.learn-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.learn-content img {
+    pointer-events: none;
+}

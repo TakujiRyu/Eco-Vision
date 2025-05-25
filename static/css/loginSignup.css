@@ -1,0 +1,302 @@
+/* -----------------------
+STYLE FOR BOTH THE FORMS
+--------------------------*/
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+/* :root {
+  --black: #000;
+  --white: #fff;
+  --gray: #666;
+  --primary-color: 
+} */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+
+body,
+html {
+  height: 100%;
+}
+
+.container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+}
+
+.back-btn {
+  position: absolute;
+  margin: 2rem;
+  padding: .6rem .7rem;
+  border-radius: 100%;
+  background: #D9D9D9;
+  color: #000;
+}
+
+.form-section {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+}
+
+.form-box {
+  width: 360px;
+  background: #f8f8f8;
+  padding: 30px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.form-box h2 {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.form-box h2 span {
+  color: #000;
+}
+
+.form-box p {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 15px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.google-btn:hover {
+  background-color: #f7f7f7;
+  border-color: #999;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.google-btn img {
+  width: 18px;
+  height: 18px;
+}
+
+.separator {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.separator::before,
+.separator::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid #ccc;
+}
+
+.separator span {
+  padding: 0 10px;
+  color: #888;
+}
+
+.form-box label {
+  display: block;
+  text-align: left;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.form-box input[type="email"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.validation-msg {
+  display: block;
+  font-size: 0.7rem;
+  margin-top: -10px;
+  margin-bottom: 10px;
+  color: red;
+  text-align: left;
+}
+.validation-msg.valid {
+  color: green;
+}
+
+.continue-btn {
+  width: 100%;
+  padding: 10px;
+  background: #000;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  border: 1px solid #000;
+}
+
+.continue-btn:hover {
+  background: #0b3c4c;
+}
+
+.signup-text {
+  margin-top: 20px;
+  font-size: 13px;
+}
+
+.signup-text a {
+  font-weight: bold;
+  color: #000;
+  text-decoration: none;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.signup-text a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 2px;
+  background-color: #0b3c4c;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.signup-text a:hover {
+  color: #0b3c4c;
+}
+
+.signup-text a:hover::after {
+  transform: scaleX(1);
+}
+
+.branding-section {
+  flex: 1;
+  background: linear-gradient(to bottom right, #5b88a1, #a6d6c3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.logo-wrapper {
+  text-align: center;
+}
+
+.corner-logo {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 10;
+  overflow: hidden;
+  width: 60%;
+}
+
+.corner-logo img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  display: block;
+}
+
+.logo-img {
+  width: 70%;
+  margin-bottom: 10px;
+}
+
+/* .branding-section h1 {
+  font-size: 36px;
+  color: #000;
+}
+
+.eco {
+  color: #2e5d3d;
+  font-weight: 500;
+}
+
+.vision {
+  font-weight: bold;
+} */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .branding-section {
+    order: -1; /* move to top */
+    width: 100%;
+    height: auto;
+    padding: 20px 0;
+    justify-content: center;
+  }
+
+  .form-section {
+    width: 100%;
+    padding: 20px;
+  }
+
+  .form-box {
+    width: 90%;
+    margin: 0 auto;
+    padding: 25px;
+  }
+
+  .form-box h2 {
+    font-size: 20px;
+  }
+
+  .form-box p,
+  .separator span,
+  .signup-text {
+    font-size: 12px;
+  }
+
+  .google-btn,
+  .continue-btn {
+    font-size: 13px;
+    padding: 10px;
+  }
+
+  .form-box label,
+  .form-box input[type="email"] {
+    font-size: 13px;
+  }
+
+  .logo-img {
+    width: 60%;
+  }
+
+  .corner-logo {
+    width: 30%;
+  }
+
+  .corner-logo img {
+    width: 100%;
+    height: auto;
+  }
+}
