@@ -1,39 +1,106 @@
 const video = document.getElementById('video');
-const canvas = document.createElement('canvas');
-const resultImg = document.getElementById('result');
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+const totalBottlesDisplay = document.getElementById('total-bottles');
 const pointsDisplay = document.getElementById('points');
+const bottleTypeDisplay = document.getElementById('bottle-type');
+
+let isCooldown = false;
+const COOLDOWN_TIME = 5000; // milliseconds, e.g., 5 seconds
+
+
+let scanning = false;
+let scanInterval = null;
+let totalBottles = 0;
+let totalPoints = 0;
+let detections = [];
 
 navigator.mediaDevices.getUserMedia({ video: true })
     .then(stream => {
         video.srcObject = stream;
-
-        // Start scanning every 3 seconds
-        setInterval(captureAndSend, 3000);
+        video.play();
+        requestAnimationFrame(draw); // Start drawing loop
     })
-    .catch(err => {
-        console.error("Failed to access webcam:", err);
+    .catch(err => console.error("Webcam access failed:", err));
+
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    detections.forEach(det => {
+        ctx.strokeStyle = `rgb(${det.color[0]},${det.color[1]},${det.color[2]})`;
+        ctx.lineWidth = 3;
+        ctx.strokeRect(det.x1, det.y1, det.x2 - det.x1, det.y2 - det.y1);
+
+        ctx.fillStyle = ctx.strokeStyle;
+        ctx.font = '18px Arial';
+        ctx.fillText(det.label, det.x1, det.y1 > 20 ? det.y1 - 10 : det.y1 + 20);
     });
 
+    requestAnimationFrame(draw);
+}
+
 function captureAndSend() {
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    const imageData = canvas.toDataURL('image/jpeg');
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = video.videoWidth;
+    tempCanvas.height = video.videoHeight;
+    const tempCtx = tempCanvas.getContext('2d');
+    tempCtx.drawImage(video, 0, 0, tempCanvas.width, tempCanvas.height);
+    const imageData = tempCanvas.toDataURL('image/jpeg');
 
     fetch('/detect', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ image: imageData })
     })
-        .then(res => res.json())
-        .then(data => {
-            if (data.error) {
-                console.error("Detection error:", data.error);
+    .then(res => res.json())
+    .then(data => {
+        if (data.error) {
+            console.error("Detection error:", data.error);
+            return;
+        }
+
+        detections = data.detections || [];
+
+        // Only increment if at least one detection
+        if (detections.length > 0) {
+            totalBottles += 1;
+            totalPoints += data.points || 0;
+
+            pointsDisplay.textContent = totalPoints;
+            totalBottlesDisplay.textContent = totalBottles;
+
+            if (data.points === 2) {
+                bottleTypeDisplay.textContent = "Plastic small";
+            } else if (data.points === 1) {
+                bottleTypeDisplay.textContent = "Crushed bottle";
             } else {
-                pointsDisplay.textContent = "Points: " + data.points;
-                resultImg.src = data.image;
+                bottleTypeDisplay.textContent = "Unknown";
             }
-        })
-        .catch(err => console.error("Fetch error:", err));
+        }
+        // else do not increment totalBottles or update bottleTypeDisplay
+    })
+    .catch(err => console.error("Fetch error:", err));
+}
+
+function startScanning() {
+    if (!scanning) {
+        scanning = true;
+        scanInterval = setInterval(captureAndSend, 3000);
+    }
+}
+
+function resetMetrics() {
+    clearInterval(scanInterval);
+    scanning = false;
+    detections = [];
+    totalBottles = 0;
+    totalPoints = 0;
+
+    pointsDisplay.textContent = "0";
+    totalBottlesDisplay.textContent = "0";
+    bottleTypeDisplay.textContent = "—";
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
