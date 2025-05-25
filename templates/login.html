@@ -4,19 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link rel="icon" type="image/X-UA-Compatible" href="/static/img/logo.svg" sizes="180x180">
-    <link rel="stylesheet" href="/static/css/loginSignup.css">
+    <link rel="icon" type="image/X-UA-Compatible" href="{{ url_for('static', filename='img/logo.svg') }}" sizes="180x180">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/loginSignup.css') }}">
     <title>Login</title>
 </head>
 <body>
     <div class="container">
-        <a href="" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+        <a href="{{ url_for('index') }}" class="back-btn"><i class="fas fa-arrow-left"></i></a>
         <div class="form-section">
             <div class="form-box">
                 <h2>Sign in to <span>EcoVision</span></h2>
                 <p>Welcome back! Please sign in to continue</p>
                 <button class="google-btn">
-                    <img src="/static/img/GoogleLogo.png" alt="Google">
+                    <img src="{{ url_for('static', filename='img/GoogleLogo.png') }}" alt="Google">
                     Continue with Google
                 </button>
                 <div class="separator"><span>or</span></div>
@@ -24,19 +24,19 @@
                 <input type="email" id="email" placeholder="Email" autocomplete="off">
                 <span id="emailValidation" class="validation-msg"></span>
                 <button class="continue-btn" onclick="submitEmail()">Continue</button>
-                <p class="signup-text">Don't have an account? <a href="./signUp.html">Sign Up</a></p>
+                <p class="signup-text">Don't have an account? <a href="{{ url_for('signUp') }}">Sign Up</a></p>
             </div>
         </div>
 
         <div class="branding-section">
             <div class="corner-logo">
-                <img src="/static/img/logoHalf.png" alt="EcoVision Half Logo">
+                <img src="{{ url_for('static', filename='img/logoHalf.png') }}" alt="EcoVision Half Logo">
             </div>
             <div class="logo-wrapper">
-            <img src="/static/img/Logo.png" alt="EcoVision Logo" class="logo-img">
+            <img src="{{ url_for('static', filename='img/Logo.png') }}" alt="EcoVision Logo" class="logo-img">
             </div>
         </div>
     </div>
-    <script src="/js/login.js"></script>
+    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
 </body>
 </html>
