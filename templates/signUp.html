@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="icon" type="image/X-UA-Compatible" href="/static/img/logo.svg" sizes="180x180">
+    <link rel="stylesheet" href="/static/css/loginSignup.css">
+    <title>SignUp</title>
+</head>
+<body>
+    <div class="container">
+        <div class="form-section">
+            <div class="form-box">
+                <h2>Sign up to <span>EcoVision</span></h2>
+                <p>Welcome back! Please sign up to start</p>
+                <button class="google-btn">
+                    <img src="/static/img/GoogleLogo.png" alt="Google">
+                    Sign Up with Google
+                </button>
+                <div class="separator"><span>or</span></div>
+                <label for="email">Email Address</label>
+                <input type="email" id="email" placeholder="Email" autocomplete="off">
+                <span id="emailValidation" class="validation-msg"></span>
+                <button class="continue-btn" onclick="submitEmail()">Continue</button>
+            </div>
+        </div>
+
+        <div class="branding-section">
+            <div class="corner-logo">
+                <img src="/static/img/logoHalf.png" alt="EcoVision Half Logo">
+            </div>
+            <div class="logo-wrapper">
+            <img src="/static/img/Logo.png" alt="EcoVision Logo" class="logo-img">
+            </div>
+        </div>
+    </div>
+    <script src="/js/login.js"></script>
+</body>
+</html>

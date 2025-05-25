@@ -2,12 +2,136 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>EcoVision Bottle Scanner</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="icon" type="image/X-UA-Compatible" href="{{ url_for('static', filename='img/logo.svg') }}" sizes="180x180">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>EcoVision</title>
 </head>
 <body>
-    <h2>EcoVision Bottle Scanner</h2>
-    <video id="video" width="640" height="480" autoplay muted></video>
-    <p id="points">Points: 0</p>
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <header class="navbar">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='img/Logo.png') }}">
+        </div>
+        <div class="nav-buttons">
+            <button class="signUp"><a href="{{ url_for('signup') }}">Sign Up</a></button>
+            <button class="login"><a href="{{ url_for('login') }}">Login</a></button>
+        </div>
+    </header>
+
+    <section class="hero">
+        <img src="{{ url_for('static', filename='img/landingPage.png') }}" alt="" class="hero-img">
+    </section>
+
+    <section class="slogan">
+        <h1>Your Vision for a Greener Future</h2>
+        <p class="tagline">Scan. Sort Sustain</p>
+        <div class="navbar-menu">
+            <nav class="navbar-menu-content">
+                <button class="navbar-menu-button-1"><img src="{{ url_for('static', filename='img/EcoVision.png') }}" alt=""></button>
+                <span class="navbar-menu-items">
+                    <button>About Us</button>
+                    <button>Dashboard</button>
+                    <button>Contact Us</button>
+                    <button>Learn</button>
+                </span>
+                <button class="highlight"><a href="{{ url_for('scan') }}">Scan & Sort</a></button>
+            </nav>
+        </div>
+    </section>
+
+    <section class="intro">
+        <div class="intro-content">
+            <h1>EcoVision: <br>Your Partner in a Greener GCIT</h1>
+            <p>EcoVision makes recycling easy and rewarding. With AI-powered <br>
+                scanning, it instantly sorts plastic and glass, turing wastes into <br>community impact. More than an app, it's movement—promoting
+                responsible disposal and sustainable actions.
+            </p>
+        </div>
+        <div class="intro-gallery">
+            <div class="left">
+                <img src="{{ url_for('static', filename='img/bin1.png') }}" alt="">
+                <img src="{{ url_for('static', filename='img/bottles 1.png') }}" alt="">
+            </div>
+            <div class="center">
+                <img src="{{ url_for('static', filename='img/bin.png') }}" alt="">
+            </div>
+            <div class="right">
+                <img src="{{ url_for('static', filename='img/bottle.png') }}" alt="">
+                <img src="{{ url_for('static', filename='img/bottles.png') }}" alt="">
+            </div>
+        </div>
+    </section>
+
+    <section class="how-it-works">
+        <div class="info">
+            <h3>EcoVision:</h3>
+            <p>How it Works & What We Offer</p>
+        </div>
+        
+        <div class="features">
+            <div class="card">
+                <h3>Recycling And Rewarding</h3>
+                <p>Recycle the bottle and depending upon the condition of the bottle the amount of bottle the rewards are given to the users in their account</p>
+            </div>
+            <div class="card">
+                <h3>Learn How to Recycle</h3>
+                <p>Recycle the bottle through the mesmerizing deep learning application in making GCIT community clean and sustainable community.</p>
+            </div>
+            <div class="card">
+                <h3>Reward System</h3>
+                <p>Recycle the bottle through EcoVision gives rewards through pointing system for the first phase of the application for the community benefit and encouragement.</p>
+            </div>
+            <div class="card">
+                <h3>AI Community through DeepLearning</h3>
+                <p>Bringing up the AI society to GCIT with applications made in campus to strengthen AI powered applications in making the community efficient and effective.</p>
+            </div>
+            <div class="more">
+                <a href="">View More <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <section class="demo">
+        <img src="{{ url_for('static', filename='img/demo.png') }}" alt="">
+        <div class="demo-link">
+            <a href="{{ url_for('scan') }}" class="btn-link">Go Live <i class="fas fa-arrow-right"></i></a>
+        </div>
+    </section>
+
+    <section class="feedback">
+        <div class="feedback-info">
+            <p style="text-align: right; font-size: 1rem;">Your insights help us improve EcoVision! Share your feedback to <br>
+                enhance features, refine bottle recognition, and make recycling <br>
+                even more rewarding. Together, we can build a smarter, greener <br>
+                GCIT—one suggestion at a time!</p>
+            <h3 style="text-align: left; font-size: 2rem;">Your Feedback, <br> Our Innovation. <br>Improve. Sustain. Thrive.</h3>
+        </div>
+        <form>
+            <input type="text" placeholder="Full Name" name="name">
+            <input type="email" placeholder="someone@email.com" name="email">
+            <textarea placeholder="Comments" name="" id=""></textarea>
+            <button type="submit">Submit</button>
+        </form>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-left">
+            <img src="{{ url_for('static', filename='img/logo2.png') }}" alt="" class="footer-logo">
+        </div>
+
+        <div class="footer-center">
+            <div class="scan-box">
+                <img src="{{ url_for('static', filename='img/sccan.png') }}" alt="">
+            </div>
+        </div>
+        <div class="footer-right">
+            <button>About Us</button>
+            <button>Contact Us</button>
+            <button>Dashboard</button>
+            <button>Learn</button>
+        </div>
+    </footer>
 </body>
 </html>
