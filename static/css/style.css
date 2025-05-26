@@ -145,6 +145,10 @@ a {
     border: .1rem solid #4e4e4e;
 }
 
+.navbar-menu-items button a {
+    color: #fff;
+}
+
 .intro {
     text-align: center;
     padding: 40px 20px;
@@ -365,6 +369,10 @@ a {
 
 .footer-right button:hover {
     background-color: #666;
+}
+
+.footer-right button a {
+    color: #CACACA;
 }
 
 @media (max-width: 600px) {
