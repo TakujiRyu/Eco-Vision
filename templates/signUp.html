@@ -1,41 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link rel="icon" type="image/X-UA-Compatible" href="{{ url_for('static', filename='img/logo.svg') }}" sizes="180x180">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/loginSignup.css') }}">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <link rel="icon" href="{{ url_for('static', filename='img/logo.svg') }}" sizes="180x180" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/loginSignup.css') }}" />
     <title>SignUp</title>
 </head>
 <body>
     <div class="container">
-        <a href="{{ url_for('index') }}" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+        <a href="#" id="backBtn" class="back-btn"><i class="fas fa-arrow-left"></i></a>
         <div class="form-section">
             <div class="form-box">
                 <h2>Sign up to <span>EcoVision</span></h2>
-                <p>Welcome back! Please sign up to start</p>
-                <button class="google-btn">
-                    <img src="{{ url_for('static', filename='img/GoogleLogo.png') }}" alt="Google">
-                    Sign Up with Google
-                </button>
-                <div class="separator"><span>or</span></div>
-                <label for="email">Email Address</label>
-                <input type="email" id="email" placeholder="Email" autocomplete="off">
-                <span id="emailValidation" class="validation-msg"></span>
-                <button class="continue-btn" onclick="submitEmail()">Continue</button>
+                <p>Welcome! Please sign up to start</p>
+
+                <!-- Flash messages -->
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <div class="flash-messages">
+                        {% for message in messages %}
+                            <p style="color: red;">{{ message }}</p>
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
+                <!-- Signup Form -->
+                <form action="{{ url_for('signUp') }}" method="POST" onsubmit="return validateSignupForm()">
+                    <label for="email">Email Address</label>
+                    <input type="email" name="email" id="email" placeholder="studentid.gcit@rub.edu.bt" required />
+                    <span id="emailValidation" class="validation-msg"></span>
+
+                    <label for="password">Password</label>
+                    <input type="password" name="password" id="password" placeholder="Password" required />
+
+                    <button type="submit" class="continue-btn">Sign Up</button>
+                </form>
+
+                <div class="separator"></div>
+                <button id="start-qr-btn" type="button" class="continue-btn">Fill Up with QR Code</button>
+                <video id="qr-video" style="width:300px; height:300px; display:none; border:1px solid #ccc; border-radius:8px;"></video>
+                <div id="qr-result" style="margin-top:10px; font-weight:bold; min-height: 20px;"></div>
             </div>
         </div>
 
         <div class="branding-section">
             <div class="corner-logo">
-                <img src="{{ url_for('static', filename='img/logoHalf.png') }}" alt="EcoVision Half Logo">
+                <img src="{{ url_for('static', filename='img/logoHalf.png') }}" alt="EcoVision Half Logo" />
             </div>
             <div class="logo-wrapper">
-            <img src="{{ url_for('static', filename='img/Logo.png') }}" alt="EcoVision Logo" class="logo-img">
+                <img src="{{ url_for('static', filename='img/Logo.png') }}" alt="EcoVision Logo" class="logo-img" />
             </div>
         </div>
     </div>
-    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
+    <script src="{{ url_for('static', filename='js/signup.js') }}"></script>
+    <script>
+        window.addEventListener('load', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+
+            // Just logged out
+            if (urlParams.get('logged_out') === '1') {
+                sessionStorage.setItem('justLoggedOut', 'true');
+                urlParams.delete('logged_out');
+            } else {
+                sessionStorage.removeItem('justLoggedOut');
+            }
+
+            // Existing account error flag
+            if (urlParams.get('exists') === '1') {
+                sessionStorage.setItem('accountExists', 'true');
+                urlParams.delete('exists');
+            } else {
+                sessionStorage.removeItem('accountExists');
+            }
+
+            const newUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
+            window.history.replaceState({}, document.title, newUrl);
+        });
+
+        document.getElementById('backBtn').addEventListener('click', function (e) {
+            e.preventDefault();
+
+            const justLoggedOut = sessionStorage.getItem('justLoggedOut') === 'true';
+            const accountExists = sessionStorage.getItem('accountExists') === 'true';
+
+            if (justLoggedOut || accountExists) {
+                sessionStorage.removeItem('accountExists');
+                window.location.href = "{{ url_for('index') }}";
+            } else {
+                history.back();
+            }
+        });
+    </script>
 </body>
 </html>

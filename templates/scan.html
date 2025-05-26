@@ -21,8 +21,12 @@
             </a>        
         </div>
         <div class="nav-buttons">
-            <button class="signUp"><a href="{{ url_for('signUp') }}">Sign Up</a></button>
-            <button class="login"><a href="{{ url_for('login') }}">Login</a></button>
+            {% if logged_in %}
+                <button class="logout"><a href="{{ url_for('logout') }}">Logout</a></button>
+            {% else %}
+                <button class="signUp"><a href="{{ url_for('signUp') }}">Sign Up</a></button>
+                <button class="login"><a href="{{ url_for('login') }}">Login</a></button>
+            {% endif %}
         </div>
     </header>
     
@@ -61,12 +65,16 @@
             <nav class="navbar-menu-content">
                 <button class="navbar-menu-button-1"><a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='img/EcoVision.png') }}" alt=""></a></button>
                 <span class="navbar-menu-items">
-                    <button><a href="{{ url_for('aboutUs') }}">About Us</a> </button>
+                    <button><a href="{{ url_for('aboutUs') }}">About Us</a></button>
                     <button><a href="{{ url_for('dashboard') }}">Dashboard</a></button>
                     <button><a href="{{ url_for('contactUs') }}">Contact Us</a></button>
                     <button><a href="{{ url_for('learn') }}">Learn</a></button>
                 </span>
-                <button class="highlight"><a href="{{ url_for('scan') }}">Scan & Sort</a></button>
+                {% if logged_in %}
+                    <button class="highlight"><a href="{{ url_for('scan') }}">Scan & Sort</a></button>
+                {% else %}
+                    <button class="highlight" onclick="alert('Please log in to access Scan & Sort')">Scan & Sort</button>
+                {% endif %}
             </nav>
         </div>
     </section>
