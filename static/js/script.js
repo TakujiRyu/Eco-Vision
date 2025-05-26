@@ -6,21 +6,37 @@ const totalBottlesDisplay = document.getElementById('total-bottles');
 const pointsDisplay = document.getElementById('points');
 const bottleTypeDisplay = document.getElementById('bottle-type');
 
-let isCooldown = false;
-const COOLDOWN_TIME = 5000; // milliseconds, e.g., 5 seconds
-
-
 let scanning = false;
 let scanInterval = null;
 let totalBottles = 0;
 let totalPoints = 0;
 let detections = [];
 
+// Load saved user data on page load
+window.addEventListener('DOMContentLoaded', () => {
+  fetch('/user_scan_stats')
+    .then(res => {
+      if (!res.ok) throw new Error('Unauthorized or error fetching stats');
+      return res.json();
+    })
+    .then(data => {
+      totalBottles = data.total_bottles || 0;
+      totalPoints = data.total_points || 0;
+      bottleTypeDisplay.textContent = data.last_bottle_type || '—';
+
+      totalBottlesDisplay.textContent = totalBottles;
+      pointsDisplay.textContent = totalPoints;
+    })
+    .catch(err => {
+      console.warn('Could not load saved scan stats:', err);
+    });
+});
+
 navigator.mediaDevices.getUserMedia({ video: true })
     .then(stream => {
         video.srcObject = stream;
         video.play();
-        requestAnimationFrame(draw); // Start drawing loop
+        requestAnimationFrame(draw);
     })
     .catch(err => console.error("Webcam access failed:", err));
 
@@ -63,7 +79,6 @@ function captureAndSend() {
 
         detections = data.detections || [];
 
-        // Only increment if at least one detection
         if (detections.length > 0) {
             totalBottles += 1;
             totalPoints += data.points || 0;
@@ -78,8 +93,26 @@ function captureAndSend() {
             } else {
                 bottleTypeDisplay.textContent = "Unknown";
             }
+
+            // Save updated stats to server
+            fetch('/update_scan_data', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    total_bottles: totalBottles,
+                    total_points: totalPoints,
+                    last_bottle_type: bottleTypeDisplay.textContent
+                })
+            })
+            .then(res => {
+                if (!res.ok) {
+                    console.error('Failed to update scan data on server');
+                }
+            })
+            .catch(err => {
+                console.error('Error updating scan data:', err);
+            });
         }
-        // else do not increment totalBottles or update bottleTypeDisplay
     })
     .catch(err => console.error("Fetch error:", err));
 }
@@ -103,4 +136,15 @@ function resetMetrics() {
     bottleTypeDisplay.textContent = "—";
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Reset data on server
+    fetch('/update_scan_data', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            total_bottles: 0,
+            total_points: 0,
+            last_bottle_type: '—'
+        })
+    }).catch(err => console.warn('Failed to reset scan data on server:', err));
 }
